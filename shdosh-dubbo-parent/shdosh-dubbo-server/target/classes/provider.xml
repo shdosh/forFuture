@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://code.alibabatech.com/schema/dubbo
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 服务提供者的应用名 -->
+	<dubbo:application name="dubbo-server" />
+	<!--  使用ZooKeeper注册中心的地址 --><!-- 可以指定连接zookeeper的客户端zkclient或是curator -->
+	<dubbo:registry id="hangzhouRegistry" address="zookeeper://192.168.86.129:2181" client="curator"/>
+	<!-- 用Dubbo协议在20880端口暴露服务 --><!-- accepts限制连接数 -->
+	<dubbo:protocol name="dubbo" port="20880" accepts="10"/>
+	<!-- 声明需要暴露的服务接口 --><!-- 建议由服务提供者设置超时时间 --><!-- 可以指定多个注册中心，用","分隔 -->
+	<!-- delay延迟暴露，-1时表示延迟到spring初始化完成后再暴露服务 --><!-- executes控制此接口的并发数，也可以限制method并发数 -->
+	<dubbo:service interface="com.shdosh.api.example.IHelloService" ref="helloService" timeout="2000"
+		registry="hangzhouRegistry" delay="5000" executes="10" />
+	<!-- 和本地bean一样实现服务 -->
+	<bean id="helloService" class="com.shdosh.server.example.HelloServiceImpl" />
+</beans>
