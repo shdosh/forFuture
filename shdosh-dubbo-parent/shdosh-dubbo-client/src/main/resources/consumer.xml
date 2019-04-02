@@ -13,9 +13,10 @@
 	<dubbo:registry id="hangzhouRegistry" address="zookeeper://192.168.86.129:2181" />
 	
 	<!-- 生成远程服务代理，可以和本地bean一样使用helloService --><!-- actives限制每个客户端的并发执行数(不推荐) -->
-	<!-- async设置异步调用该方法 -->
+	<!-- async设置异步调用该方法 --><!-- cluster属性配置容错模式，Dubbo主要支持6种：Failover故障转移(默认容错模式)、Failfast快速失败模式、Failsafe失败安全模式、Failback（失败后自动恢复，记录失败请求，定时重发）、Forking(并行调用多个服务器)、Broadcast(广播调用所有提供者) -->
+	<!-- retries失败重试次数 -->
 	<dubbo:reference id="helloService" interface="com.shdosh.api.example.IHelloService" 
-		registry="hangzhouRegistry" actives="10">
+		registry="hangzhouRegistry" actives="10" cluster="failover" retries="2">
 		<dubbo:method name="sayHello" async="false" />
 	</dubbo:reference>
 </beans>
